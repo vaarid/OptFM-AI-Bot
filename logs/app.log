@@ -108,3 +108,286 @@
 2025-08-31 22:39:56,183 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGoUSVED9QBMfmm1LqJKNskCBohvUFiCIo/getUpdates "HTTP/1.1 200 OK"
 2025-08-31 22:39:56,374 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGoUSVED9QBMfmm1LqJKNskCBohvUFiCIo/getUpdates "HTTP/1.1 401 Unauthorized"
 2025-08-31 22:39:56,374 - telegram.ext.Updater - ERROR - Invalid token; aborting
+2025-08-31 22:50:17,210 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-08-31 22:50:18,542 - faq.faq_manager - WARNING - FAQ файл не найден: data\faq.json
+2025-08-31 22:50:18,542 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-08-31 22:50:21,848 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getMe "HTTP/1.1 200 OK"
+2025-08-31 22:50:21,848 - telegram.ext.Application - INFO - Application started
+2025-08-31 22:50:22,035 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/deleteWebhook "HTTP/1.1 200 OK"
+2025-08-31 22:50:22,035 - __main__ - INFO - Бот успешно запущен и работает
+2025-08-31 22:50:32,757 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:50:42,959 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:50:53,162 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:50:57,811 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:50:57,811 - bot.telegram_bot - INFO - FAQ ответ не найден для пользователя 532044009: привет...
+2025-08-31 22:50:58,514 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/sendMessage "HTTP/1.1 200 OK"
+2025-08-31 22:51:06,797 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:51:06,798 - bot.telegram_bot - INFO - FAQ ответ не найден для пользователя 532044009: какие у вас есть продукты?...
+2025-08-31 22:51:07,483 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/sendMessage "HTTP/1.1 200 OK"
+2025-08-31 22:51:17,001 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:51:17,277 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:51:17,278 - bot.telegram_bot - INFO - FAQ ответ не найден для пользователя 532044009: какие цены?...
+2025-08-31 22:51:17,986 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/sendMessage "HTTP/1.1 200 OK"
+2025-08-31 22:51:27,481 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:51:37,684 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:51:47,886 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:51:58,089 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:52:08,291 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:52:16,136 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:52:16,137 - bot.telegram_bot - INFO - FAQ ответ не найден для пользователя 532044009: качество?...
+2025-08-31 22:52:16,909 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/sendMessage "HTTP/1.1 200 OK"
+2025-08-31 22:52:26,339 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:52:36,543 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:52:46,745 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:52:56,947 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:53:07,151 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:53:17,353 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:53:27,557 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:53:39,159 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-08-31 22:53:40,454 - faq.faq_manager - WARNING - FAQ файл не найден: data\faq.json
+2025-08-31 22:53:40,455 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-08-31 22:53:41,115 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getMe "HTTP/1.1 200 OK"
+2025-08-31 22:53:41,116 - telegram.ext.Application - INFO - Application started
+2025-08-31 22:53:41,303 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/deleteWebhook "HTTP/1.1 200 OK"
+2025-08-31 22:53:41,304 - __main__ - INFO - Бот успешно запущен и работает
+2025-08-31 22:53:51,925 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:53:55,833 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:53:55,835 - faq.faq_manager - INFO - Поиск FAQ для запроса: 'какие цены?' (слова: ['какие', 'цены'])
+2025-08-31 22:53:55,836 - faq.faq_manager - INFO - FAQ 1 - score: 0.00 (keywords: ['продукты', 'товары', 'ассортимент', 'что продаете', 'каталог', 'есть', 'предлагаете', 'продаете'])
+2025-08-31 22:53:55,836 - faq.faq_manager - INFO - FAQ 2 - score: 0.00 (keywords: ['контакты', 'связаться', 'телефон', 'email', 'адрес', 'где находитесь'])
+2025-08-31 22:53:55,836 - faq.faq_manager - INFO - FAQ 3 - score: 0.12 (keywords: ['цены', 'стоимость', 'прайс', 'сколько стоит', 'цена', 'у вас', 'ваши', 'стоит'])
+2025-08-31 22:53:55,836 - faq.faq_manager - INFO - FAQ 4 - score: 0.00 (keywords: ['доставка', 'отправка', 'транспорт', 'курьер', 'самовывоз'])
+2025-08-31 22:53:55,836 - faq.faq_manager - INFO - FAQ 5 - score: 0.00 (keywords: ['гарантия', 'возврат', 'обмен', 'качество', 'сервис', 'качеств', 'гаранти'])
+2025-08-31 22:53:55,836 - faq.faq_manager - INFO - FAQ 6 - score: 0.00 (keywords: ['юридические лица', 'организации', 'компании', 'бизнес', 'опт'])
+2025-08-31 22:53:55,836 - faq.faq_manager - INFO - Найдено совпадение по ключевым словам: 3 (score: 0.12)
+2025-08-31 22:53:55,837 - bot.telegram_bot - INFO - FAQ ответ для пользователя 532044009: 3
+2025-08-31 22:53:56,511 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/sendMessage "HTTP/1.1 200 OK"
+2025-08-31 22:54:06,016 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:54:08,104 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:54:08,107 - faq.faq_manager - INFO - Поиск FAQ для запроса: 'сроки поставки?' (слова: ['сроки', 'поставки'])
+2025-08-31 22:54:08,108 - faq.faq_manager - INFO - FAQ 1 - score: 0.00 (keywords: ['продукты', 'товары', 'ассортимент', 'что продаете', 'каталог', 'есть', 'предлагаете', 'продаете'])
+2025-08-31 22:54:08,108 - faq.faq_manager - INFO - FAQ 2 - score: 0.00 (keywords: ['контакты', 'связаться', 'телефон', 'email', 'адрес', 'где находитесь'])
+2025-08-31 22:54:08,108 - faq.faq_manager - INFO - FAQ 3 - score: 0.00 (keywords: ['цены', 'стоимость', 'прайс', 'сколько стоит', 'цена', 'у вас', 'ваши', 'стоит'])
+2025-08-31 22:54:08,108 - faq.faq_manager - INFO - FAQ 4 - score: 0.00 (keywords: ['доставка', 'отправка', 'транспорт', 'курьер', 'самовывоз'])
+2025-08-31 22:54:08,109 - faq.faq_manager - INFO - FAQ 5 - score: 0.00 (keywords: ['гарантия', 'возврат', 'обмен', 'качество', 'сервис', 'качеств', 'гаранти'])
+2025-08-31 22:54:08,109 - faq.faq_manager - INFO - FAQ 6 - score: 0.00 (keywords: ['юридические лица', 'организации', 'компании', 'бизнес', 'опт'])
+2025-08-31 22:54:08,109 - faq.faq_manager - INFO - Совпадений не найдено (лучший score: 0.00)
+2025-08-31 22:54:08,109 - bot.telegram_bot - INFO - FAQ ответ не найден для пользователя 532044009: сроки поставки?...
+2025-08-31 22:54:08,786 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/sendMessage "HTTP/1.1 200 OK"
+2025-08-31 22:54:18,283 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:54:23,306 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:54:23,307 - faq.faq_manager - INFO - Поиск FAQ для запроса: 'доставка' (слова: ['доставка'])
+2025-08-31 22:54:23,307 - faq.faq_manager - INFO - Найдено точное совпадение: 4
+2025-08-31 22:54:23,308 - bot.telegram_bot - INFO - FAQ ответ для пользователя 532044009: 4
+2025-08-31 22:54:24,044 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/sendMessage "HTTP/1.1 200 OK"
+2025-08-31 22:54:33,482 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:54:43,656 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:54:53,829 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:55:04,004 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:55:14,180 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:55:24,356 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:55:34,528 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:55:44,713 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:55:54,887 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 22:56:05,061 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8331497512:AAGQsIdxkjHvTyIWZRve6b1qd9IC-L1dqRc/getUpdates "HTTP/1.1 200 OK"
+2025-08-31 23:41:13,308 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-08-31 23:41:14,558 - faq.enhanced_faq_manager - INFO - Загружено 22 FAQ записей из data\faq_enhanced.json
+2025-08-31 23:41:14,559 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-08-31 23:41:15,205 - telegram.ext.Application - INFO - Application started
+2025-08-31 23:41:15,389 - __main__ - INFO - Бот успешно запущен и работает
+2025-08-31 23:41:33,990 - faq.enhanced_faq_manager - INFO - Поиск FAQ для запроса: 'Привет' (слова: ['привет'])
+2025-08-31 23:41:33,993 - faq.enhanced_faq_manager - INFO - Совпадений не найдено
+2025-08-31 23:41:33,993 - bot.telegram_bot - INFO - FAQ ответ не найден для пользователя 532044009: Привет...
+2025-08-31 23:43:13,348 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-08-31 23:43:14,602 - faq.enhanced_faq_manager - INFO - Загружено 22 FAQ записей из data\faq_enhanced.json
+2025-08-31 23:43:14,602 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-08-31 23:43:15,269 - telegram.ext.Application - INFO - Application started
+2025-08-31 23:43:15,458 - __main__ - INFO - Бот успешно запущен и работает
+2025-08-31 23:43:23,623 - bot.telegram_bot - INFO - Приветствие от пользователя 532044009: Здравствуйте
+2025-08-31 23:43:38,457 - bot.telegram_bot - INFO - User 532044009 requested help
+2025-08-31 23:43:45,939 - bot.telegram_bot - INFO - User 532044009 requested FAQ list
+2025-08-31 23:44:03,549 - bot.telegram_bot - INFO - User 532044009 requested FAQ statistics
+2025-08-31 23:46:36,209 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-08-31 23:46:37,504 - faq.enhanced_faq_manager - INFO - Загружено 22 FAQ записей из data\faq_enhanced.json
+2025-08-31 23:46:37,505 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-08-31 23:46:38,151 - telegram.ext.Application - INFO - Application started
+2025-08-31 23:46:38,335 - __main__ - INFO - Бот успешно запущен и работает
+2025-08-31 23:46:42,100 - bot.telegram_bot - INFO - User 532044009 (Vaarid) started the bot
+2025-08-31 23:46:45,797 - bot.telegram_bot - INFO - User 532044009 requested help
+2025-08-31 23:46:52,018 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons
+2025-08-31 23:46:58,482 - bot.telegram_bot - INFO - User 532044009 requested all FAQ as text
+2025-08-31 23:47:02,475 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons
+2025-08-31 23:47:13,493 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_application.py", line 1234, in process_update
+    await coroutine
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\src\bot\telegram_bot.py", line 333, in button_callback
+    faq = self.faq_manager.get_faq_by_id(faq_id)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'EnhancedFAQManager' object has no attribute 'get_faq_by_id'
+2025-08-31 23:47:19,185 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_application.py", line 1234, in process_update
+    await coroutine
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\src\bot\telegram_bot.py", line 333, in button_callback
+    faq = self.faq_manager.get_faq_by_id(faq_id)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'EnhancedFAQManager' object has no attribute 'get_faq_by_id'
+2025-08-31 23:47:52,162 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-08-31 23:47:53,462 - faq.enhanced_faq_manager - INFO - Загружено 22 FAQ записей из data\faq_enhanced.json
+2025-08-31 23:47:53,464 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-08-31 23:47:54,060 - telegram.ext.Application - INFO - Application started
+2025-08-31 23:47:54,232 - __main__ - INFO - Бот успешно запущен и работает
+2025-08-31 23:48:00,312 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons
+2025-08-31 23:48:02,618 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 18
+2025-08-31 23:48:13,067 - bot.telegram_bot - WARNING - User 532044009 requested invalid FAQ ID: back_to_list
+2025-08-31 23:48:16,505 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 21
+2025-08-31 23:48:27,791 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons
+2025-08-31 23:48:30,387 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 22
+2025-08-31 23:48:36,558 - bot.telegram_bot - WARNING - User 532044009 requested invalid FAQ ID: back_to_list
+2025-08-31 23:51:11,234 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-08-31 23:51:12,504 - faq.enhanced_faq_manager - INFO - Загружено 22 FAQ записей из data\faq_enhanced.json
+2025-08-31 23:51:12,505 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-08-31 23:51:13,193 - telegram.ext.Application - INFO - Application started
+2025-08-31 23:51:13,386 - __main__ - INFO - Бот успешно запущен и работает
+2025-08-31 23:51:20,471 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-08-31 23:51:20,679 - bot.telegram_bot - WARNING - User 532044009 requested invalid FAQ ID: back_to_list
+2025-08-31 23:51:24,373 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons
+2025-08-31 23:51:41,391 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_10
+2025-08-31 23:51:41,617 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 10
+2025-08-31 23:51:46,074 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_11
+2025-08-31 23:51:46,329 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 11
+2025-08-31 23:51:48,828 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-08-31 23:51:49,066 - bot.telegram_bot - WARNING - User 532044009 requested invalid FAQ ID: back_to_list
+2025-08-31 23:52:41,105 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-08-31 23:52:42,397 - faq.enhanced_faq_manager - INFO - Загружено 22 FAQ записей из data\faq_enhanced.json
+2025-08-31 23:52:42,398 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-08-31 23:52:43,119 - telegram.ext.Application - INFO - Application started
+2025-08-31 23:52:43,321 - __main__ - INFO - Бот успешно запущен и работает
+2025-08-31 23:52:53,206 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons
+2025-08-31 23:52:55,366 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_11
+2025-08-31 23:52:55,611 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 11
+2025-08-31 23:53:01,414 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-08-31 23:53:01,668 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list
+2025-08-31 23:53:03,952 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_21
+2025-08-31 23:53:04,176 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 21
+2025-08-31 23:53:07,143 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-08-31 23:53:07,395 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list
+2025-08-31 23:53:11,794 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_21
+2025-08-31 23:53:12,111 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 21
+2025-08-31 23:53:15,811 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-08-31 23:53:16,133 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list
+2025-08-31 23:54:34,569 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-08-31 23:54:35,868 - faq.enhanced_faq_manager - INFO - Загружено 22 FAQ записей из data\faq_enhanced.json
+2025-08-31 23:54:35,869 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-08-31 23:54:36,558 - telegram.ext.Application - INFO - Application started
+2025-08-31 23:54:36,754 - __main__ - INFO - Бот успешно запущен и работает
+2025-08-31 23:54:55,515 - bot.telegram_bot - INFO - User 532044009 (Vaarid) started the bot
+2025-08-31 23:55:01,363 - bot.telegram_bot - INFO - User 532044009 requested help
+2025-08-31 23:55:10,807 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons
+2025-08-31 23:55:18,212 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_6
+2025-08-31 23:55:18,421 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 6
+2025-08-31 23:55:30,023 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-08-31 23:55:30,245 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list
+2025-08-31 23:55:32,037 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_17
+2025-08-31 23:55:32,253 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 17
+2025-08-31 23:55:34,129 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-08-31 23:55:34,366 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list
+2025-08-31 23:55:35,786 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_16
+2025-08-31 23:55:36,087 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 16
+2025-08-31 23:55:44,956 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-08-31 23:55:45,179 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list
+2025-08-31 23:55:47,987 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_show_all
+2025-08-31 23:55:48,202 - bot.telegram_bot - INFO - User 532044009 requested all FAQ as text
+2025-08-31 23:55:51,637 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons
+2025-08-31 23:56:47,780 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-08-31 23:56:49,134 - faq.enhanced_faq_manager - INFO - Загружено 22 FAQ записей из data\faq_enhanced.json
+2025-08-31 23:56:49,134 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-08-31 23:56:49,800 - telegram.ext.Application - INFO - Application started
+2025-08-31 23:56:49,985 - __main__ - INFO - Бот успешно запущен и работает
+2025-08-31 23:57:23,112 - bot.telegram_bot - INFO - User 532044009 (Vaarid) started the bot
+2025-08-31 23:57:31,435 - bot.telegram_bot - INFO - User 532044009 requested help
+2025-08-31 23:59:14,011 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons
+2025-09-01 00:00:21,159 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_5
+2025-09-01 00:00:21,396 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 5
+2025-09-01 00:01:19,743 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-09-01 00:01:20,045 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list
+2025-09-01 00:01:24,829 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_20
+2025-09-01 00:01:25,038 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 20
+2025-09-01 00:01:46,923 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-09-01 00:01:47,186 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list
+2025-09-01 00:03:40,049 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-09-01 00:03:41,346 - faq.enhanced_faq_manager - INFO - Загружено 22 FAQ записей из data\faq_enhanced.json
+2025-09-01 00:03:41,347 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-09-01 00:03:42,011 - telegram.ext.Application - INFO - Application started
+2025-09-01 00:03:42,199 - __main__ - INFO - Бот успешно запущен и работает
+2025-09-01 00:03:43,066 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_application.py", line 1234, in process_update
+    await coroutine
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\src\bot\telegram_bot.py", line 304, in button_callback
+    await query.answer()  # Убираем "часики" у кнопки
+    ^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_callbackquery.py", line 180, in answer
+    return await self.get_bot().answer_callback_query(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 778, in answer_callback_query
+    return await super().answer_callback_query(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 3213, in answer_callback_query
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 613, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 641, in _do_post
+    return await request.post(
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Query is too old and response timeout expired or query id is invalid
+2025-09-01 00:04:04,549 - bot.telegram_bot - INFO - User 532044009 (Vaarid) started the bot
+2025-09-01 00:04:06,512 - bot.telegram_bot - INFO - User 532044009 requested help
+2025-09-01 00:04:16,927 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons (page 1)
+2025-09-01 00:04:21,056 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_9
+2025-09-01 00:04:21,305 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 9
+2025-09-01 00:04:28,164 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-09-01 00:04:28,390 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list (page 1)
+2025-09-01 00:04:30,669 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_show_more_10
+2025-09-01 00:04:30,909 - bot.telegram_bot - INFO - User 532044009 requested FAQ page 2
+2025-09-01 00:04:37,517 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_show_more_20
+2025-09-01 00:04:37,734 - bot.telegram_bot - INFO - User 532044009 requested FAQ page 3
+2025-09-01 00:04:41,742 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_show_more_10
+2025-09-01 00:04:41,971 - bot.telegram_bot - INFO - User 532044009 requested FAQ page 2
+2025-09-01 00:04:43,991 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-09-01 00:04:44,215 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list (page 1)
+2025-09-01 00:05:29,675 - faq.enhanced_faq_manager - INFO - Поиск FAQ для запроса: 'У вас есть Apple?' (слова: ['у', 'вас', 'есть', 'apple'])
+2025-09-01 00:05:29,675 - faq.enhanced_faq_manager - INFO - Найдено совпадение по ключевым словам: 20
+2025-09-01 00:05:29,675 - bot.telegram_bot - INFO - FAQ ответ для пользователя 532044009: 20
+2025-09-01 00:05:53,131 - bot.telegram_bot - INFO - Короткое сообщение от пользователя 532044009: Huawei
+2025-09-01 00:06:13,040 - faq.enhanced_faq_manager - INFO - Поиск FAQ для запроса: 'Есть товары для huawei' (слова: ['есть', 'товары', 'для', 'huawei'])
+2025-09-01 00:06:13,040 - faq.enhanced_faq_manager - INFO - Найдено совпадение по ключевым словам: 2
+2025-09-01 00:06:13,041 - bot.telegram_bot - INFO - FAQ ответ для пользователя 532044009: 2
+2025-09-01 00:10:39,030 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-09-01 00:10:40,356 - faq.enhanced_faq_manager - INFO - Загружено 23 FAQ записей из data\faq_enhanced.json
+2025-09-01 00:10:40,357 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-09-01 00:10:40,979 - telegram.ext.Application - INFO - Application started
+2025-09-01 00:10:41,157 - __main__ - INFO - Бот успешно запущен и работает

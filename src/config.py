@@ -21,6 +21,7 @@ class Config:
     # Логирование
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
     LOG_FILE: str = os.getenv("LOG_FILE", "logs/app.log")
+    API_LOG_FILE: str = os.getenv("API_LOG_FILE", "logs/api.log")
     
     # База данных (для будущих итераций)
     DATABASE_URL: Optional[str] = os.getenv("DATABASE_URL")

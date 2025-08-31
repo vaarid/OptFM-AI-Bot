@@ -13,7 +13,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from config import Config
 from bot.telegram_bot import OptFMBot
 
-# Настройка логирования
+# Настройка основного логирования
 logging.basicConfig(
     level=getattr(logging, Config.LOG_LEVEL),
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -22,6 +22,14 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
+
+# Настройка отдельного логгера для API вызовов
+api_logger = logging.getLogger('httpx')
+api_logger.setLevel(logging.INFO)
+api_handler = logging.FileHandler(Config.API_LOG_FILE, encoding='utf-8')
+api_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+api_logger.addHandler(api_handler)
+api_logger.propagate = False  # Не дублировать в основной лог
 
 logger = logging.getLogger(__name__)
 

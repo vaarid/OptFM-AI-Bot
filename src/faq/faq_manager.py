@@ -43,7 +43,7 @@ class FAQManager:
             {
                 "id": 1,
                 "question": "Какие продукты вы предлагаете?",
-                "keywords": ["продукты", "товары", "ассортимент", "что продаете", "каталог"],
+                "keywords": ["продукты", "товары", "ассортимент", "что продаете", "каталог", "есть", "предлагаете", "продаете"],
                 "answer": "Компания OptFM предлагает широкий ассортимент продуктов для вашего бизнеса. У нас есть:\n\n• Промышленное оборудование\n• Электронные компоненты\n• Инструменты и материалы\n• Специализированные решения\n\nДля получения актуального прайса и подробной информации, напишите ваш конкретный запрос."
             },
             {
@@ -55,7 +55,7 @@ class FAQManager:
             {
                 "id": 3,
                 "question": "Какие у вас цены?",
-                "keywords": ["цены", "стоимость", "прайс", "сколько стоит", "цена"],
+                "keywords": ["цены", "стоимость", "прайс", "сколько стоит", "цена", "у вас", "ваши", "стоит"],
                 "answer": "Цены на наши продукты зависят от объема заказа, спецификации и текущих рыночных условий. Для получения актуального прайса:\n\n• Укажите конкретный продукт или категорию\n• Сообщите требуемое количество\n• Укажите сроки поставки\n\nЯ помогу найти подходящие варианты и передам ваш запрос менеджеру для расчета."
             },
             {
@@ -67,7 +67,7 @@ class FAQManager:
             {
                 "id": 5,
                 "question": "Какие гарантии вы предоставляете?",
-                "keywords": ["гарантия", "возврат", "обмен", "качество", "сервис"],
+                "keywords": ["гарантия", "возврат", "обмен", "качество", "сервис", "качеств", "гаранти"],
                 "answer": "OptFM предоставляет полную гарантию на все продукты:\n\n✅ Гарантийный срок согласно техническим условиям\n✅ Возможность возврата в течение 14 дней\n✅ Техническая поддержка\n✅ Сервисное обслуживание\n\nВсе товары сертифицированы и соответствуют российским стандартам качества."
             },
             {
@@ -93,6 +93,9 @@ class FAQManager:
         
         # Нормализация запроса
         query_lower = query.lower().strip()
+        query_words = re.findall(r'\w+', query_lower)
+        
+        logger.info(f"Поиск FAQ для запроса: '{query}' (слова: {query_words})")
         
         # Поиск по точному совпадению вопроса
         for faq in self.faq_data:
@@ -105,34 +108,33 @@ class FAQManager:
         best_score = 0
         
         for faq in self.faq_data:
-            score = self._calculate_keyword_score(query_lower, faq["keywords"])
+            score = self._calculate_keyword_score(query_words, faq["keywords"])
+            logger.info(f"FAQ {faq['id']} - score: {score:.2f} (keywords: {faq['keywords']})")
             if score > best_score:
                 best_score = score
                 best_match = faq
         
-        # Возвращаем результат только если найдено хорошее совпадение
-        if best_score >= 0.3:  # Порог релевантности
+        # Снижаем порог релевантности для лучшего поиска
+        if best_score >= 0.1:  # Более мягкий порог
             logger.info(f"Найдено совпадение по ключевым словам: {best_match['id']} (score: {best_score:.2f})")
             return best_match
         
+        logger.info(f"Совпадений не найдено (лучший score: {best_score:.2f})")
         return None
     
-    def _calculate_keyword_score(self, query: str, keywords: List[str]) -> float:
+    def _calculate_keyword_score(self, query_words: List[str], keywords: List[str]) -> float:
         """
         Вычисление релевантности запроса к ключевым словам
         
         Args:
-            query: Поисковый запрос
+            query_words: Слова из запроса
             keywords: Список ключевых слов
             
         Returns:
             Оценка релевантности от 0 до 1
         """
-        if not keywords:
+        if not keywords or not query_words:
             return 0.0
-        
-        # Разбиваем запрос на слова
-        query_words = re.findall(r'\w+', query.lower())
         
         # Подсчитываем совпадения
         matches = 0
@@ -141,11 +143,17 @@ class FAQManager:
         for keyword in keywords:
             keyword_lower = keyword.lower()
             for word in query_words:
-                if keyword_lower in word or word in keyword_lower:
+                # Проверяем различные варианты совпадений
+                if (keyword_lower == word or 
+                    keyword_lower in word or 
+                    word in keyword_lower or
+                    keyword_lower.startswith(word) or
+                    word.startswith(keyword_lower)):
                     matches += 1
                     break
         
-        return matches / total_keywords if total_keywords > 0 else 0.0
+        score = matches / total_keywords if total_keywords > 0 else 0.0
+        return score
     
     def get_all_faq(self) -> List[Dict]:
         """Возвращает все FAQ записи"""
