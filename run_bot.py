@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Скрипт запуска OptFM AI Bot
+Скрипт запуска Fashion Mobile AI Bot
 """
 import asyncio
 import logging
@@ -11,7 +11,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 from config import Config
-from bot.telegram_bot import OptFMBot
+from bot.telegram_bot import FashionMobileBot
 
 # Настройка основного логирования
 logging.basicConfig(
@@ -45,8 +45,8 @@ async def main():
         Config.print_config()
         
         # Создаем и запускаем бота
-        logger.info("Запуск OptFM AI Bot...")
-        bot = OptFMBot(Config.TELEGRAM_BOT_TOKEN)
+        logger.info("Запуск Fashion Mobile AI Bot...")
+        bot = FashionMobileBot(Config.TELEGRAM_BOT_TOKEN)
         
         # Запускаем бота
         await bot.start_polling()
