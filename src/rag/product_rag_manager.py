@@ -186,13 +186,14 @@ class ProductRAGManager:
                        min_price: Optional[float] = None,
                        max_price: Optional[float] = None) -> List[Dict[str, Any]]:
         """
-        Поиск товаров по запросу
+        Поиск товаров по запросу с улучшенной логикой для производителей
         
         Args:
             query: Поисковый запрос
             top_k: Количество результатов
             category_filter: Фильтр по категории
             brand_filter: Фильтр по бренду
+            device_manufacturer_filter: Фильтр по производителю техники
             min_price: Минимальная цена
             max_price: Максимальная цена
             
@@ -200,6 +201,20 @@ class ProductRAGManager:
             Список найденных товаров
         """
         logger.info(f"Поиск товаров: '{query}' (top_k={top_k})")
+        
+        # Улучшенная логика поиска для производителей
+        query_lower = query.lower().strip()
+        
+        # Если запрос похож на производителя, увеличиваем количество результатов
+        # и применяем специальную логику
+        is_manufacturer_search = self._is_manufacturer_query(query_lower)
+        
+        if is_manufacturer_search:
+            # Для поиска по производителю увеличиваем количество результатов
+            search_top_k = min(top_k * 2, 20)
+            logger.info(f"Поиск по производителю '{query}', увеличен top_k до {search_top_k}")
+        else:
+            search_top_k = top_k
         
         # Создаем эмбеддинг для запроса
         query_embedding = self.embeddings_manager.get_embedding_for_query(query)
@@ -210,15 +225,11 @@ class ProductRAGManager:
             where_filter["category"] = category_filter
         if brand_filter:
             where_filter["brand"] = brand_filter
-        # Фильтр по производителям техники будет применяться после поиска
-        # так как ChromaDB не поддерживает поиск по подстроке в метаданных
-        # Фильтр по цене будет применяться после поиска
-        # так как ChromaDB не поддерживает множественные операторы для одного поля
         
         # Выполняем поиск в ChromaDB
         results = self.collection.query(
             query_embeddings=[query_embedding.tolist()],
-            n_results=top_k,
+            n_results=search_top_k,
             where=where_filter if where_filter else None
         )
         
@@ -240,32 +251,57 @@ class ProductRAGManager:
                 }
                 products.append(product)
         
-        # Применяем фильтры после поиска
-        if device_manufacturer_filter:
+        # Улучшенная фильтрация для производителей
+        if is_manufacturer_search or device_manufacturer_filter:
             filtered_products = []
+            target_manufacturer = device_manufacturer_filter or query_lower
+            
             for product in products:
-                if device_manufacturer_filter in product.get('device_manufacturers', []):
+                # Проверяем производителей в названии товара и в device_manufacturers
+                product_manufacturers = [m.lower().strip() for m in product.get('device_manufacturers', [])]
+                product_name_lower = product.get('name', '').lower()
+                
+                # Проверяем точное совпадение или частичное совпадение
+                if (target_manufacturer in product_manufacturers or 
+                    target_manufacturer in product_name_lower or
+                    any(target_manufacturer in m for m in product_manufacturers)):
                     filtered_products.append(product)
+            
             products = filtered_products
         
-        # Применяем фильтр по цене (временно отключен, так как цена теперь заглушка)
-         # if min_price is not None or max_price is not None:
-         #     filtered_products = []
-         #     for product in products:
-         #         price = product.get('price', 0)
-         #         if price is None:
-         #             continue
-         #         
-         #         if min_price is not None and price < min_price:
-         #             continue
-         #         if max_price is not None and price > max_price:
-         #             continue
-         #         
-         #         filtered_products.append(product)
-         #     products = filtered_products
+        # Ограничиваем количество результатов
+        products = products[:top_k]
         
         logger.info(f"Найдено {len(products)} товаров")
         return products
+    
+    def _is_manufacturer_query(self, query: str) -> bool:
+        """
+        Определяет, является ли запрос поиском по производителю
+        
+        Args:
+            query: Поисковый запрос
+            
+        Returns:
+            True, если запрос похож на производителя
+        """
+        # Список известных производителей
+        known_manufacturers = [
+            'samsung', 'iphone', 'apple', 'xiaomi', 'huawei', 'honor', 'oppo', 'realme',
+            'oneplus', 'nokia', 'motorola', 'lg', 'sony', 'asus', 'acer', 'lenovo',
+            'hp', 'dell', 'toshiba', 'canon', 'nikon', 'panasonic', 'sharp', 'philips'
+        ]
+        
+        # Проверяем точное совпадение
+        if query in known_manufacturers:
+            return True
+        
+        # Проверяем частичное совпадение
+        for manufacturer in known_manufacturers:
+            if manufacturer in query or query in manufacturer:
+                return True
+        
+        return False
     
     def get_categories(self) -> List[str]:
         """Возвращает список всех категорий"""
@@ -315,6 +351,42 @@ class ProductRAGManager:
         except Exception as e:
             logger.error(f"Ошибка получения производителей техники: {e}")
             return []
+    
+    def get_product_by_id(self, product_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Получает товар по точному ID
+        
+        Args:
+            product_id: ID товара
+            
+        Returns:
+            Данные товара или None, если не найден
+        """
+        try:
+            results = self.collection.get(
+                ids=[product_id],
+                limit=1
+            )
+            
+            if results['ids'] and results['ids'][0]:
+                metadata = results['metadatas'][0]
+                product = {
+                    "id": product_id,
+                    "name": metadata.get('name', ''),
+                    "category": metadata.get('category', ''),
+                    "subcategory": metadata.get('subcategory', ''),
+                    "brand": metadata.get('brand', ''),
+                    "device_manufacturers": metadata.get('device_manufacturers', '').split(',') if metadata.get('device_manufacturers') else [],
+                    "price": "Уточняйте у менеджера",  # Заглушка вместо реальной цены
+                    "description": metadata.get('description', ''),
+                    "document": results['documents'][0] if results['documents'] else ''
+                }
+                return product
+            
+            return None
+        except Exception as e:
+            logger.error(f"Ошибка получения товара по ID {product_id}: {e}")
+            return None
     
     def get_products_by_category(self, category: str, limit: int = 50) -> List[Dict[str, Any]]:
         """

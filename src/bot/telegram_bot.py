@@ -73,7 +73,7 @@ class OptFMBot:
         """
         user = update.effective_user
         welcome_message = (
-            f"👋 Привет, {user.first_name}!\n\n"
+            f"Здравствуйте, {user.first_name}!\n\n"
             "Я бот компании OptFM. Могу помочь с информацией о наших продуктах и услугах.\n\n"
             "Просто напишите ваш вопрос, и я постараюсь на него ответить.\n\n"
             "Используйте /help для получения справки."
@@ -96,25 +96,32 @@ class OptFMBot:
             "/start - Начать работу с ботом\n"
             "/help - Показать эту справку\n"
             "/faq - Показать FAQ с интерактивными кнопками\n"
-            "/search - Поиск товаров в каталоге\n"
+            "/search - Интерактивный поиск товаров\n"
             "/categories - Просмотр категорий товаров\n"
             "/manufacturers - Просмотр производителей техники\n\n"
             "**Как использовать:**\n"
             "• Напишите вопрос о продуктах OptFM\n"
             "• Используйте /faq для просмотра всех вопросов с кнопками\n"
-            "• Используйте /search для поиска товаров в каталоге\n"
+            "• Используйте /search для интерактивного поиска товаров\n"
+            "• Просто напишите название товара или производителя для поиска\n"
             "• Нажмите на интересующий вопрос для получения ответа\n\n"
-            "**Примеры поиска товаров:**\n"
-            "• /search FM модулятор\n"
-            "• /search чехол для iPhone\n"
-            "• /search зарядка Samsung\n"
-            "• /search стекло Xiaomi\n\n"
+            "**Поиск товаров:**\n"
+            "• Нажмите /search и введите запрос\n"
+            "• Или просто напишите: Samsung, iPhone, FM модулятор\n"
+            "• Используйте интерактивные кнопки для навигации\n\n"
+            "**Примеры запросов:**\n"
+            "• Samsung\n"
+            "• iPhone\n"
+            "• FM модулятор\n"
+            "• защитное стекло\n"
+            "• наушники\n"
+            "• зарядка\n\n"
             "**Примеры вопросов:**\n"
             "• Какие у вас есть продукты?\n"
             "• Расскажите о ценах\n"
             "• Как с вами связаться?\n\n"
-            "**Интерактивные FAQ:**\n"
-            "Команда /faq покажет все вопросы в виде кнопок. Просто нажмите на интересующий вопрос!"
+            "**Интерактивные возможности:**\n"
+            "Все функции доступны через удобные кнопки!"
         )
         
         await update.message.reply_text(help_message, parse_mode='Markdown')
@@ -180,7 +187,7 @@ class OptFMBot:
         
     async def echo_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
-        Обработчик текстовых сообщений с поиском в FAQ
+        Обработчик текстовых сообщений с поиском в FAQ и товарах
         
         Args:
             update: Объект обновления от Telegram
@@ -189,8 +196,16 @@ class OptFMBot:
         user_message = update.message.text
         user = update.effective_user
         
+        # Проверяем, находится ли пользователь в режиме поиска
+        if context.user_data.get('search_mode', False):
+            # Пользователь в режиме поиска - выполняем поиск товаров
+            await self._perform_search(update, user_message)
+            # Сбрасываем режим поиска
+            context.user_data['search_mode'] = False
+            return
+        
         # Проверяем, является ли сообщение приветствием
-        greeting_keywords = ['привет', 'здравствуй', 'добрый день', 'добрый вечер', 'доброе утро', 'hi', 'hello']
+        greeting_keywords = ['здравствуйте', 'здравствуй', 'добрый день', 'добрый вечер', 'доброе утро', 'hi', 'hello']
         is_greeting = any(greeting in user_message.lower() for greeting in greeting_keywords)
         
         # Проверяем, является ли сообщение прощанием
@@ -201,10 +216,13 @@ class OptFMBot:
         question_keywords = ['что', 'как', 'где', 'когда', 'почему', 'зачем', 'какие', 'какой', 'сколько', 'есть ли', 'можно ли']
         is_question = any(question in user_message.lower() for question in question_keywords) or user_message.strip().endswith('?')
         
+        # Проверяем, может ли это быть поисковый запрос (короткое сообщение без вопроса)
+        is_potential_search = len(user_message.split()) <= 3 and not is_question and not is_greeting and not is_farewell
+        
         if is_greeting:
-            # Приветствие - даем дружелюбный ответ
+            # Приветствие - даем вежливый ответ
             response = (
-                f"👋 Привет, {user.first_name}!\n\n"
+                f"Здравствуйте, {user.first_name}!\n\n"
                 "Я бот компании OptFM. Могу помочь с информацией о наших продуктах и услугах.\n\n"
                 "Задайте мне любой вопрос, например:\n"
                 "• Какие товары вы продаете?\n"
@@ -217,24 +235,31 @@ class OptFMBot:
         elif is_farewell:
             # Прощание - даем вежливый ответ
             response = (
-                f"👋 До свидания, {user.first_name}!\n\n"
+                f"До свидания, {user.first_name}!\n\n"
                 "Спасибо за обращение к OptFM. Если у вас появятся вопросы, "
                 "я всегда готов помочь!\n\n"
-                "Удачного дня! 😊"
+                "Удачного дня!"
             )
             logger.info(f"Прощание от пользователя {user.id}: {user_message}")
-        elif not is_question and len(user_message.split()) < 3:
-            # Короткое сообщение без вопроса - предлагаем задать вопрос
+        elif is_potential_search:
+            # Возможно, это поисковый запрос - предлагаем поиск
             response = (
-                f"🤔 {user.first_name}, я не совсем понял ваш запрос.\n\n"
-                "Задайте мне вопрос о продуктах OptFM, например:\n"
-                "• Какие товары вы продаете?\n"
-                "• Как с вами связаться?\n"
-                "• Какие условия доставки?\n"
-                "• Есть ли у вас гарантия?\n\n"
-                "Или используйте /help для получения справки."
+                f"🔍 Возможно, вы ищете товар: \"{user_message}\"\n\n"
+                "Хотите выполнить поиск в каталоге товаров?\n\n"
+                "Или задайте мне вопрос о продуктах OptFM."
             )
-            logger.info(f"Короткое сообщение от пользователя {user.id}: {user_message}")
+            
+            # Создаем кнопки для поиска
+            keyboard = [
+                [InlineKeyboardButton("🔍 Да, найти товар", callback_data=f"search_query_{user_message}")],
+                [InlineKeyboardButton("📚 Задать вопрос", callback_data="ask_question")]
+            ]
+            
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await update.message.reply_text(response, reply_markup=reply_markup)
+            logger.info(f"Потенциальный поисковый запрос от пользователя {user.id}: {user_message}")
+            return
         else:
             # Поиск ответа в FAQ
             faq_answer = self.faq_manager.search_faq(user_message)
@@ -260,7 +285,7 @@ class OptFMBot:
     
     async def search_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
-        Обработчик команды /search - поиск товаров в каталоге
+        Обработчик команды /search - интерактивный поиск товаров в каталоге
         
         Args:
             update: Объект обновления от Telegram
@@ -272,56 +297,89 @@ class OptFMBot:
             )
             return
         
-        if not context.args:
-            await update.message.reply_text(
-                "🔍 **Поиск товаров OptFM**\n\n"
-                "Использование: `/search ваш запрос`\n\n"
-                "**Примеры:**\n"
-                "• `/search FM модулятор`\n"
-                "• `/search чехол для iPhone`\n"
-                "• `/search зарядка Samsung`\n"
-                "• `/search стекло Xiaomi`\n"
-                "• `/search наушники`\n"
-                "• `/search автодержатель`\n\n"
-                "**Дополнительные команды:**\n"
-                "• `/categories` - просмотр всех категорий\n"
-                "• `/manufacturers` - просмотр производителей",
-                parse_mode='Markdown'
-            )
+        # Если есть аргументы, выполняем поиск
+        if context.args:
+            query = " ".join(context.args)
+            await self._perform_search(update, query)
             return
         
-        query = " ".join(context.args)
+        # Если аргументов нет, показываем интерактивное меню поиска
+        search_message = (
+            "🔍 **Поиск товаров OptFM**\n\n"
+            "Введите наименование аксессуара или производителя, "
+            "к которому хотите подобрать аксессуар.\n\n"
+            "**Примеры запросов:**\n"
+            "• Samsung\n"
+            "• iPhone\n"
+            "• FM модулятор\n"
+            "• защитное стекло\n"
+            "• наушники\n"
+            "• зарядка"
+        )
+        
+        # Создаем интерактивные кнопки
+        keyboard = [
+            [InlineKeyboardButton("📂 Просмотр категорий", callback_data="search_categories")],
+            [InlineKeyboardButton("🏭 Просмотр производителей", callback_data="search_manufacturers")],
+            [InlineKeyboardButton("🔍 Популярные запросы", callback_data="search_popular")]
+        ]
+        
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        await update.message.reply_text(
+            search_message,
+            parse_mode='Markdown',
+            reply_markup=reply_markup
+        )
+        
+        # Сохраняем состояние поиска для пользователя
+        context.user_data['search_mode'] = True
+        logger.info(f"Пользователь {update.effective_user.id} запустил интерактивный поиск")
+    
+    async def _perform_search(self, update: Update, query: str):
+        """
+        Выполняет поиск товаров с улучшенной логикой
+        
+        Args:
+            update: Объект обновления от Telegram
+            query: Поисковый запрос
+        """
         user = update.effective_user
         
         try:
-            # Выполняем поиск товаров
-            products = self.rag_manager.search_products(query, top_k=5)
+            # Улучшенный поиск с приоритетом по производителям
+            products = self.rag_manager.search_products(query, top_k=10)
             
             if not products:
-                await update.message.reply_text(
-                    f"🔍 **Поиск: \"{query}\"**\n\n"
-                    "❌ Товары не найдены.\n\n"
-                    "**Попробуйте:**\n"
-                    "• Переформулировать запрос\n"
-                    "• Использовать /categories для просмотра категорий\n"
-                    "• Использовать /manufacturers для просмотра производителей\n\n"
-                    "**Примеры запросов:**\n"
-                    "• FM модулятор\n"
-                    "• чехол для iPhone\n"
-                    "• зарядка Samsung\n"
-                    "• стекло Xiaomi"
-                )
-                logger.info(f"Поиск товаров не дал результатов для пользователя {user.id}: {query}")
+                # Если товары не найдены, предлагаем альтернативы
+                await self._handle_no_results(update, query)
                 return
             
-            # Формируем сообщение с результатами
+            # Анализируем результаты для улучшения UX
+            categories_found = set()
+            manufacturers_found = set()
+            
+            for product in products:
+                if product.get('category'):
+                    categories_found.add(product['category'])
+                if product.get('device_manufacturers'):
+                    manufacturers_found.update(product['device_manufacturers'])
+            
+            # Формируем умное сообщение с результатами
             search_message = f"🔍 **Поиск: \"{query}\"**\n\n"
-            search_message += f"Найдено товаров: **{len(products)}**\n\n"
+            
+            if len(products) <= 5:
+                search_message += f"Найдено товаров: **{len(products)}**\n\n"
+            else:
+                search_message += f"Найдено товаров: **{len(products)}** (показано 5)\n\n"
+            
+            # Показываем только первые 5 товаров для лучшего UX
+            display_products = products[:5]
             
             # Создаем кнопки для каждого товара
             keyboard = []
             
-            for i, product in enumerate(products, 1):
+            for i, product in enumerate(display_products, 1):
                 # Формируем текст кнопки
                 button_text = f"{i}. {product['name'][:40]}"
                 if len(product['name']) > 40:
@@ -340,11 +398,12 @@ class OptFMBot:
                 search_message += f"    Категория: {category}\n"
                 search_message += f"    Бренд: {brand}\n\n"
             
-            # Добавляем кнопки для фильтров
-            keyboard.append([
-                InlineKeyboardButton("📂 По категориям", callback_data="search_categories"),
-                InlineKeyboardButton("🏭 По производителям", callback_data="search_manufacturers")
-            ])
+            # Добавляем умные кнопки на основе найденных категорий
+            if categories_found:
+                keyboard.append([InlineKeyboardButton("📂 Уточнить по категориям", callback_data="search_categories")])
+            
+            if manufacturers_found:
+                keyboard.append([InlineKeyboardButton("🏭 Уточнить по производителям", callback_data="search_manufacturers")])
             
             # Добавляем кнопку "Новый поиск"
             keyboard.append([InlineKeyboardButton("🔍 Новый поиск", callback_data="search_new")])
@@ -363,6 +422,69 @@ class OptFMBot:
             logger.error(f"Ошибка поиска товаров для пользователя {user.id}: {e}")
             await update.message.reply_text(
                 "❌ Произошла ошибка при поиске товаров. Попробуйте позже."
+            )
+    
+    async def _handle_no_results(self, update: Update, query: str):
+        """
+        Обрабатывает случай, когда товары не найдены
+        
+        Args:
+            update: Объект обновления от Telegram
+            query: Поисковый запрос
+        """
+        user = update.effective_user
+        
+        # Пытаемся найти похожие товары или предложить альтернативы
+        try:
+            # Ищем товары с похожими названиями
+            similar_products = self.rag_manager.search_products(query, top_k=3)
+            
+            if similar_products:
+                no_results_message = (
+                    f"🔍 **Поиск: \"{query}\"**\n\n"
+                    "❌ Товары не найдены.\n\n"
+                    "**Возможно, вы искали:**\n"
+                )
+                
+                keyboard = []
+                for i, product in enumerate(similar_products, 1):
+                    no_results_message += f"• {product['name']}\n"
+                    keyboard.append([InlineKeyboardButton(
+                        text=f"Показать: {product['name'][:30]}...",
+                        callback_data=f"product_{product['id']}"
+                    )])
+                
+                keyboard.append([InlineKeyboardButton("🔍 Новый поиск", callback_data="search_new")])
+                keyboard.append([InlineKeyboardButton("📂 Просмотр категорий", callback_data="search_categories")])
+                
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                await update.message.reply_text(
+                    no_results_message,
+                    parse_mode='Markdown',
+                    reply_markup=reply_markup
+                )
+            else:
+                # Если ничего не найдено, предлагаем общие категории
+                await update.message.reply_text(
+                    f"🔍 **Поиск: \"{query}\"**\n\n"
+                    "❌ Товары не найдены.\n\n"
+                    "**Попробуйте:**\n"
+                    "• Переформулировать запрос\n"
+                    "• Использовать более общие термины\n"
+                    "• Просмотреть категории товаров\n\n"
+                    "**Примеры запросов:**\n"
+                    "• Samsung\n"
+                    "• iPhone\n"
+                    "• защитное стекло\n"
+                    "• зарядка\n"
+                    "• наушники"
+                )
+                
+        except Exception as e:
+            logger.error(f"Ошибка обработки отсутствующих результатов для пользователя {user.id}: {e}")
+            await update.message.reply_text(
+                "❌ Произошла ошибка при поиске. Попробуйте позже."
             )
     
     async def categories_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -802,11 +924,10 @@ class OptFMBot:
                 return
             
             try:
-                # Получаем товары по ID (пока что используем поиск по ID)
-                products = self.rag_manager.search_products(product_id, top_k=1)
+                # Получаем товар по точному ID
+                product = self.rag_manager.get_product_by_id(product_id)
                 
-                if products:
-                    product = products[0]
+                if product:
                     
                     # Формируем детальную информацию о товаре
                     product_info = f"📦 **{product['name']}**\n\n"
@@ -851,21 +972,89 @@ class OptFMBot:
                 await query.edit_message_text("❌ Произошла ошибка при получении информации о товаре.")
         
         elif callback_data == "search_new":
-            # Новый поиск
-            await query.edit_message_text(
+            # Новый поиск - запускаем интерактивный режим
+            search_message = (
                 "🔍 **Поиск товаров OptFM**\n\n"
-                "Используйте команду `/search ваш запрос`\n\n"
-                "**Примеры:**\n"
-                "• `/search FM модулятор`\n"
-                "• `/search чехол для iPhone`\n"
-                "• `/search зарядка Samsung`\n"
-                "• `/search стекло Xiaomi`\n\n"
-                "**Дополнительные команды:**\n"
-                "• `/categories` - просмотр всех категорий\n"
-                "• `/manufacturers` - просмотр производителей",
+                "Введите наименование аксессуара или производителя, "
+                "к которому хотите подобрать аксессуар.\n\n"
+                "**Примеры запросов:**\n"
+                "• Samsung\n"
+                "• iPhone\n"
+                "• FM модулятор\n"
+                "• защитное стекло\n"
+                "• наушники\n"
+                "• зарядка"
+            )
+            
+            # Создаем интерактивные кнопки
+            keyboard = [
+                [InlineKeyboardButton("📂 Просмотр категорий", callback_data="search_categories")],
+                [InlineKeyboardButton("🏭 Просмотр производителей", callback_data="search_manufacturers")],
+                [InlineKeyboardButton("🔍 Популярные запросы", callback_data="search_popular")]
+            ]
+            
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await query.edit_message_text(
+                search_message,
+                parse_mode='Markdown',
+                reply_markup=reply_markup
+            )
+            
+            # Устанавливаем режим поиска для пользователя
+            context.user_data['search_mode'] = True
+            logger.info(f"User {user.id} started interactive search")
+        
+        elif callback_data.startswith("search_query_"):
+            # Поиск по конкретному запросу
+            query = callback_data[13:]  # Убираем "search_query_" из начала
+            await self._perform_search(update, query)
+            logger.info(f"User {user.id} searched for: {query}")
+        
+        elif callback_data == "search_popular":
+            # Показать популярные запросы
+            popular_message = (
+                "🔍 **Популярные запросы:**\n\n"
+                "Выберите интересующий вас запрос:"
+            )
+            
+            keyboard = [
+                [InlineKeyboardButton("📱 Samsung", callback_data="search_query_Samsung")],
+                [InlineKeyboardButton("🍎 iPhone", callback_data="search_query_iPhone")],
+                [InlineKeyboardButton("📻 FM модулятор", callback_data="search_query_FM модулятор")],
+                [InlineKeyboardButton("🛡️ Защитное стекло", callback_data="search_query_защитное стекло")],
+                [InlineKeyboardButton("🎧 Наушники", callback_data="search_query_наушники")],
+                [InlineKeyboardButton("🔌 Зарядка", callback_data="search_query_зарядка")],
+                [InlineKeyboardButton("📂 Все категории", callback_data="search_categories")],
+                [InlineKeyboardButton("🔍 Свой запрос", callback_data="search_new")]
+            ]
+            
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await query.edit_message_text(
+                popular_message,
+                parse_mode='Markdown',
+                reply_markup=reply_markup
+            )
+            logger.info(f"User {user.id} requested popular searches")
+        
+        elif callback_data == "ask_question":
+            # Переключение в режим вопросов
+            question_message = (
+                "📚 **Задайте вопрос о продуктах OptFM**\n\n"
+                "Напишите ваш вопрос, и я постараюсь на него ответить.\n\n"
+                "**Примеры вопросов:**\n"
+                "• Какие у вас есть продукты?\n"
+                "• Как с вами связаться?\n"
+                "• Какие условия доставки?\n"
+                "• Есть ли у вас гарантия?"
+            )
+            
+            await query.edit_message_text(
+                question_message,
                 parse_mode='Markdown'
             )
-            logger.info(f"User {user.id} requested new search")
+            logger.info(f"User {user.id} switched to question mode")
         
         elif callback_data == "search_categories":
             # Показать категории
