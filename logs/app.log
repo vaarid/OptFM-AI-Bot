@@ -586,3 +586,5 @@ task: <Task cancelling name='Application:8331497512:update_fetcher' coro=<Applic
 2025-09-02 18:22:00,060 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_4
 2025-09-02 18:22:00,213 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 4
 2025-09-02 18:22:06,690 - bot.telegram_bot - INFO - User 532044009 viewed their requests (1 requests)
+2025-09-02 18:24:18,321 - bot.telegram_bot - INFO - Stopping Telegram bot...
+2025-09-02 18:24:18,435 - telegram.ext.Application - WARNING - Fetching updates got a asyncio.CancelledError. Ignoring as this task may onlybe closed via `Application.stop`.
