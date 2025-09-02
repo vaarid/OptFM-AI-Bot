@@ -9,6 +9,7 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from faq.enhanced_faq_manager import EnhancedFAQManager
+from rag.product_rag_manager import ProductRAGManager
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,15 @@ class OptFMBot:
         self.token = token
         self.application = Application.builder().token(token).build()
         self.faq_manager = EnhancedFAQManager()
+        
+        # Инициализируем RAG менеджер для поиска товаров
+        try:
+            self.rag_manager = ProductRAGManager()
+            logger.info("RAG менеджер успешно инициализирован")
+        except Exception as e:
+            logger.error(f"Ошибка инициализации RAG менеджера: {e}")
+            self.rag_manager = None
+        
         self._setup_handlers()
         
     def _setup_handlers(self):
@@ -38,7 +48,14 @@ class OptFMBot:
         # Обработчик команды /faq
         self.application.add_handler(CommandHandler("faq", self.faq_command))
         
-
+        # Обработчик команды /search для поиска товаров
+        self.application.add_handler(CommandHandler("search", self.search_command))
+        
+        # Обработчик команды /categories для просмотра категорий
+        self.application.add_handler(CommandHandler("categories", self.categories_command))
+        
+        # Обработчик команды /manufacturers для просмотра производителей
+        self.application.add_handler(CommandHandler("manufacturers", self.manufacturers_command))
         
         # Обработчик callback-запросов (для интерактивных кнопок)
         self.application.add_handler(CallbackQueryHandler(self.button_callback))
@@ -78,16 +95,24 @@ class OptFMBot:
             "**Доступные команды:**\n"
             "/start - Начать работу с ботом\n"
             "/help - Показать эту справку\n"
-            "/faq - Показать FAQ с интерактивными кнопками\n\n"
+            "/faq - Показать FAQ с интерактивными кнопками\n"
+            "/search - Поиск товаров в каталоге\n"
+            "/categories - Просмотр категорий товаров\n"
+            "/manufacturers - Просмотр производителей техники\n\n"
             "**Как использовать:**\n"
             "• Напишите вопрос о продуктах OptFM\n"
             "• Используйте /faq для просмотра всех вопросов с кнопками\n"
+            "• Используйте /search для поиска товаров в каталоге\n"
             "• Нажмите на интересующий вопрос для получения ответа\n\n"
+            "**Примеры поиска товаров:**\n"
+            "• /search FM модулятор\n"
+            "• /search чехол для iPhone\n"
+            "• /search зарядка Samsung\n"
+            "• /search стекло Xiaomi\n\n"
             "**Примеры вопросов:**\n"
             "• Какие у вас есть продукты?\n"
             "• Расскажите о ценах\n"
             "• Как с вами связаться?\n\n"
-
             "**Интерактивные FAQ:**\n"
             "Команда /faq покажет все вопросы в виде кнопок. Просто нажмите на интересующий вопрос!"
         )
@@ -232,6 +257,222 @@ class OptFMBot:
                 logger.info(f"FAQ ответ не найден для пользователя {user.id}: {user_message[:50]}...")
         
         await update.message.reply_text(response)
+    
+    async def search_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Обработчик команды /search - поиск товаров в каталоге
+        
+        Args:
+            update: Объект обновления от Telegram
+            context: Контекст бота
+        """
+        if not self.rag_manager:
+            await update.message.reply_text(
+                "❌ Поиск товаров временно недоступен. Попробуйте позже."
+            )
+            return
+        
+        if not context.args:
+            await update.message.reply_text(
+                "🔍 **Поиск товаров OptFM**\n\n"
+                "Использование: `/search ваш запрос`\n\n"
+                "**Примеры:**\n"
+                "• `/search FM модулятор`\n"
+                "• `/search чехол для iPhone`\n"
+                "• `/search зарядка Samsung`\n"
+                "• `/search стекло Xiaomi`\n"
+                "• `/search наушники`\n"
+                "• `/search автодержатель`\n\n"
+                "**Дополнительные команды:**\n"
+                "• `/categories` - просмотр всех категорий\n"
+                "• `/manufacturers` - просмотр производителей",
+                parse_mode='Markdown'
+            )
+            return
+        
+        query = " ".join(context.args)
+        user = update.effective_user
+        
+        try:
+            # Выполняем поиск товаров
+            products = self.rag_manager.search_products(query, top_k=5)
+            
+            if not products:
+                await update.message.reply_text(
+                    f"🔍 **Поиск: \"{query}\"**\n\n"
+                    "❌ Товары не найдены.\n\n"
+                    "**Попробуйте:**\n"
+                    "• Переформулировать запрос\n"
+                    "• Использовать /categories для просмотра категорий\n"
+                    "• Использовать /manufacturers для просмотра производителей\n\n"
+                    "**Примеры запросов:**\n"
+                    "• FM модулятор\n"
+                    "• чехол для iPhone\n"
+                    "• зарядка Samsung\n"
+                    "• стекло Xiaomi"
+                )
+                logger.info(f"Поиск товаров не дал результатов для пользователя {user.id}: {query}")
+                return
+            
+            # Формируем сообщение с результатами
+            search_message = f"🔍 **Поиск: \"{query}\"**\n\n"
+            search_message += f"Найдено товаров: **{len(products)}**\n\n"
+            
+            # Создаем кнопки для каждого товара
+            keyboard = []
+            
+            for i, product in enumerate(products, 1):
+                # Формируем текст кнопки
+                button_text = f"{i}. {product['name'][:40]}"
+                if len(product['name']) > 40:
+                    button_text += "..."
+                
+                # Добавляем кнопку
+                keyboard.append([InlineKeyboardButton(
+                    text=button_text,
+                    callback_data=f"product_{product['id']}"
+                )])
+                
+                # Добавляем краткую информацию в сообщение
+                category = product.get('category', 'Не указана')
+                brand = product.get('brand', 'Не указан')
+                search_message += f"**{i}.** {product['name']}\n"
+                search_message += f"    Категория: {category}\n"
+                search_message += f"    Бренд: {brand}\n\n"
+            
+            # Добавляем кнопки для фильтров
+            keyboard.append([
+                InlineKeyboardButton("📂 По категориям", callback_data="search_categories"),
+                InlineKeyboardButton("🏭 По производителям", callback_data="search_manufacturers")
+            ])
+            
+            # Добавляем кнопку "Новый поиск"
+            keyboard.append([InlineKeyboardButton("🔍 Новый поиск", callback_data="search_new")])
+            
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await update.message.reply_text(
+                search_message, 
+                parse_mode='Markdown', 
+                reply_markup=reply_markup
+            )
+            
+            logger.info(f"Поиск товаров для пользователя {user.id}: найдено {len(products)} товаров для запроса '{query}'")
+            
+        except Exception as e:
+            logger.error(f"Ошибка поиска товаров для пользователя {user.id}: {e}")
+            await update.message.reply_text(
+                "❌ Произошла ошибка при поиске товаров. Попробуйте позже."
+            )
+    
+    async def categories_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Обработчик команды /categories - показывает все категории товаров
+        
+        Args:
+            update: Объект обновления от Telegram
+            context: Контекст бота
+        """
+        if not self.rag_manager:
+            await update.message.reply_text(
+                "❌ Каталог товаров временно недоступен. Попробуйте позже."
+            )
+            return
+        
+        try:
+            categories = self.rag_manager.get_categories()
+            
+            if not categories:
+                await update.message.reply_text("❌ Категории товаров не найдены.")
+                return
+            
+            # Показываем первые 20 категорий
+            categories_message = "📂 **Категории товаров OptFM:**\n\n"
+            
+            keyboard = []
+            for i, category in enumerate(categories[:20], 1):
+                categories_message += f"**{i}.** {category}\n"
+                
+                # Создаем кнопку для категории
+                button_text = category[:30] + "..." if len(category) > 30 else category
+                keyboard.append([InlineKeyboardButton(
+                    text=f"{i}. {button_text}",
+                    callback_data=f"category_{category}"
+                )])
+            
+            if len(categories) > 20:
+                categories_message += f"\n... и еще **{len(categories) - 20}** категорий\n"
+                keyboard.append([InlineKeyboardButton("📄 Показать еще", callback_data="categories_more")])
+            
+            keyboard.append([InlineKeyboardButton("🔍 Поиск товаров", callback_data="search_new")])
+            
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await update.message.reply_text(
+                categories_message,
+                parse_mode='Markdown',
+                reply_markup=reply_markup
+            )
+            
+            logger.info(f"Пользователь {update.effective_user.id} запросил список категорий")
+            
+        except Exception as e:
+            logger.error(f"Ошибка получения категорий для пользователя {update.effective_user.id}: {e}")
+            await update.message.reply_text("❌ Произошла ошибка при получении категорий.")
+    
+    async def manufacturers_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Обработчик команды /manufacturers - показывает всех производителей техники
+        
+        Args:
+            update: Объект обновления от Telegram
+            context: Контекст бота
+        """
+        if not self.rag_manager:
+            await update.message.reply_text(
+                "❌ Каталог товаров временно недоступен. Попробуйте позже."
+            )
+            return
+        
+        try:
+            manufacturers = self.rag_manager.get_device_manufacturers()
+            
+            if not manufacturers:
+                await update.message.reply_text("❌ Производители техники не найдены.")
+                return
+            
+            # Показываем производителей
+            manufacturers_message = "🏭 **Производители техники:**\n\n"
+            
+            keyboard = []
+            for i, manufacturer in enumerate(manufacturers[:15], 1):
+                manufacturers_message += f"**{i}.** {manufacturer}\n"
+                
+                # Создаем кнопку для производителя
+                keyboard.append([InlineKeyboardButton(
+                    text=f"{i}. {manufacturer}",
+                    callback_data=f"manufacturer_{manufacturer}"
+                )])
+            
+            if len(manufacturers) > 15:
+                manufacturers_message += f"\n... и еще **{len(manufacturers) - 15}** производителей\n"
+                keyboard.append([InlineKeyboardButton("📄 Показать еще", callback_data="manufacturers_more")])
+            
+            keyboard.append([InlineKeyboardButton("🔍 Поиск товаров", callback_data="search_new")])
+            
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await update.message.reply_text(
+                manufacturers_message,
+                parse_mode='Markdown',
+                reply_markup=reply_markup
+            )
+            
+            logger.info(f"Пользователь {update.effective_user.id} запросил список производителей")
+            
+        except Exception as e:
+            logger.error(f"Ошибка получения производителей для пользователя {update.effective_user.id}: {e}")
+            await update.message.reply_text("❌ Произошла ошибка при получении производителей.")
     
     async def stats_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
@@ -550,6 +791,249 @@ class OptFMBot:
                 except ValueError:
                     await query.edit_message_text("❌ Неверный ID вопроса.")
                     logger.warning(f"User {user.id} requested invalid FAQ ID: {faq_id}")
+        
+        # Обработка кнопок для товаров и поиска
+        elif callback_data.startswith("product_"):
+            # Показать детали товара
+            product_id = callback_data[8:]  # Убираем "product_" из начала
+            
+            if not self.rag_manager:
+                await query.edit_message_text("❌ Информация о товаре временно недоступна.")
+                return
+            
+            try:
+                # Получаем товары по ID (пока что используем поиск по ID)
+                products = self.rag_manager.search_products(product_id, top_k=1)
+                
+                if products:
+                    product = products[0]
+                    
+                    # Формируем детальную информацию о товаре
+                    product_info = f"📦 **{product['name']}**\n\n"
+                    
+                    if product.get('category'):
+                        product_info += f"**Категория:** {product['category']}\n"
+                    
+                    if product.get('subcategory'):
+                        product_info += f"**Подкатегория:** {product['subcategory']}\n"
+                    
+                    if product.get('brand') and product['brand'] != 'Unknown':
+                        product_info += f"**Бренд:** {product['brand']}\n"
+                    
+                    if product.get('device_manufacturers'):
+                        manufacturers = ", ".join(product['device_manufacturers'])
+                        product_info += f"**Совместимость:** {manufacturers}\n"
+                    
+                    if product.get('description'):
+                        product_info += f"**Описание:** {product['description']}\n"
+                    
+                    product_info += f"\n**Цена:** {product.get('price', 'Уточняйте у менеджера')}\n\n"
+                    product_info += "💬 Для заказа свяжитесь с менеджером!"
+                    
+                    # Создаем кнопки навигации
+                    keyboard = [
+                        [InlineKeyboardButton("🔍 Новый поиск", callback_data="search_new")],
+                        [InlineKeyboardButton("📂 Категории", callback_data="search_categories")],
+                        [InlineKeyboardButton("🏭 Производители", callback_data="search_manufacturers")]
+                    ]
+                    
+                    reply_markup = InlineKeyboardMarkup(keyboard)
+                    
+                    await query.edit_message_text(product_info, parse_mode='Markdown', reply_markup=reply_markup)
+                    logger.info(f"User {user.id} viewed product details: {product_id}")
+                    
+                else:
+                    await query.edit_message_text("❌ Товар не найден.")
+                    logger.warning(f"User {user.id} requested non-existent product: {product_id}")
+                    
+            except Exception as e:
+                logger.error(f"Ошибка получения информации о товаре для пользователя {user.id}: {e}")
+                await query.edit_message_text("❌ Произошла ошибка при получении информации о товаре.")
+        
+        elif callback_data == "search_new":
+            # Новый поиск
+            await query.edit_message_text(
+                "🔍 **Поиск товаров OptFM**\n\n"
+                "Используйте команду `/search ваш запрос`\n\n"
+                "**Примеры:**\n"
+                "• `/search FM модулятор`\n"
+                "• `/search чехол для iPhone`\n"
+                "• `/search зарядка Samsung`\n"
+                "• `/search стекло Xiaomi`\n\n"
+                "**Дополнительные команды:**\n"
+                "• `/categories` - просмотр всех категорий\n"
+                "• `/manufacturers` - просмотр производителей",
+                parse_mode='Markdown'
+            )
+            logger.info(f"User {user.id} requested new search")
+        
+        elif callback_data == "search_categories":
+            # Показать категории
+            if not self.rag_manager:
+                await query.edit_message_text("❌ Каталог товаров временно недоступен.")
+                return
+            
+            try:
+                categories = self.rag_manager.get_categories()
+                
+                if not categories:
+                    await query.edit_message_text("❌ Категории товаров не найдены.")
+                    return
+                
+                categories_message = "📂 **Категории товаров OptFM:**\n\n"
+                
+                keyboard = []
+                for i, category in enumerate(categories[:15], 1):
+                    categories_message += f"**{i}.** {category}\n"
+                    
+                    button_text = category[:30] + "..." if len(category) > 30 else category
+                    keyboard.append([InlineKeyboardButton(
+                        text=f"{i}. {button_text}",
+                        callback_data=f"category_{category}"
+                    )])
+                
+                if len(categories) > 15:
+                    categories_message += f"\n... и еще **{len(categories) - 15}** категорий\n"
+                    keyboard.append([InlineKeyboardButton("📄 Показать еще", callback_data="categories_more")])
+                
+                keyboard.append([InlineKeyboardButton("🔍 Поиск товаров", callback_data="search_new")])
+                
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                await query.edit_message_text(categories_message, parse_mode='Markdown', reply_markup=reply_markup)
+                logger.info(f"User {user.id} requested categories from search")
+                
+            except Exception as e:
+                logger.error(f"Ошибка получения категорий для пользователя {user.id}: {e}")
+                await query.edit_message_text("❌ Произошла ошибка при получении категорий.")
+        
+        elif callback_data == "search_manufacturers":
+            # Показать производителей
+            if not self.rag_manager:
+                await query.edit_message_text("❌ Каталог товаров временно недоступен.")
+                return
+            
+            try:
+                manufacturers = self.rag_manager.get_device_manufacturers()
+                
+                if not manufacturers:
+                    await query.edit_message_text("❌ Производители техники не найдены.")
+                    return
+                
+                manufacturers_message = "🏭 **Производители техники:**\n\n"
+                
+                keyboard = []
+                for i, manufacturer in enumerate(manufacturers[:15], 1):
+                    manufacturers_message += f"**{i}.** {manufacturer}\n"
+                    
+                    keyboard.append([InlineKeyboardButton(
+                        text=f"{i}. {manufacturer}",
+                        callback_data=f"manufacturer_{manufacturer}"
+                    )])
+                
+                if len(manufacturers) > 15:
+                    manufacturers_message += f"\n... и еще **{len(manufacturers) - 15}** производителей\n"
+                    keyboard.append([InlineKeyboardButton("📄 Показать еще", callback_data="manufacturers_more")])
+                
+                keyboard.append([InlineKeyboardButton("🔍 Поиск товаров", callback_data="search_new")])
+                
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                await query.edit_message_text(manufacturers_message, parse_mode='Markdown', reply_markup=reply_markup)
+                logger.info(f"User {user.id} requested manufacturers from search")
+                
+            except Exception as e:
+                logger.error(f"Ошибка получения производителей для пользователя {user.id}: {e}")
+                await query.edit_message_text("❌ Произошла ошибка при получении производителей.")
+        
+        elif callback_data.startswith("category_"):
+            # Поиск товаров по категории
+            category = callback_data[9:]  # Убираем "category_" из начала
+            
+            if not self.rag_manager:
+                await query.edit_message_text("❌ Поиск товаров временно недоступен.")
+                return
+            
+            try:
+                products = self.rag_manager.get_products_by_category(category, limit=10)
+                
+                if not products:
+                    await query.edit_message_text(f"❌ В категории '{category}' товары не найдены.")
+                    return
+                
+                category_message = f"📂 **Категория: {category}**\n\n"
+                category_message += f"Найдено товаров: **{len(products)}**\n\n"
+                
+                keyboard = []
+                for i, product in enumerate(products, 1):
+                    button_text = f"{i}. {product['name'][:40]}"
+                    if len(product['name']) > 40:
+                        button_text += "..."
+                    
+                    keyboard.append([InlineKeyboardButton(
+                        text=button_text,
+                        callback_data=f"product_{product['id']}"
+                    )])
+                    
+                    category_message += f"**{i}.** {product['name']}\n"
+                    category_message += f"    Бренд: {product.get('brand', 'Не указан')}\n\n"
+                
+                keyboard.append([InlineKeyboardButton("🔍 Новый поиск", callback_data="search_new")])
+                keyboard.append([InlineKeyboardButton("📂 Все категории", callback_data="search_categories")])
+                
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                await query.edit_message_text(category_message, parse_mode='Markdown', reply_markup=reply_markup)
+                logger.info(f"User {user.id} viewed category: {category}")
+                
+            except Exception as e:
+                logger.error(f"Ошибка поиска товаров по категории для пользователя {user.id}: {e}")
+                await query.edit_message_text("❌ Произошла ошибка при поиске товаров по категории.")
+        
+        elif callback_data.startswith("manufacturer_"):
+            # Поиск товаров по производителю
+            manufacturer = callback_data[13:]  # Убираем "manufacturer_" из начала
+            
+            if not self.rag_manager:
+                await query.edit_message_text("❌ Поиск товаров временно недоступен.")
+                return
+            
+            try:
+                products = self.rag_manager.search_products(manufacturer, top_k=10, device_manufacturer_filter=manufacturer)
+                
+                if not products:
+                    await query.edit_message_text(f"❌ Товары для производителя '{manufacturer}' не найдены.")
+                    return
+                
+                manufacturer_message = f"🏭 **Производитель: {manufacturer}**\n\n"
+                manufacturer_message += f"Найдено товаров: **{len(products)}**\n\n"
+                
+                keyboard = []
+                for i, product in enumerate(products, 1):
+                    button_text = f"{i}. {product['name'][:40]}"
+                    if len(product['name']) > 40:
+                        button_text += "..."
+                    
+                    keyboard.append([InlineKeyboardButton(
+                        text=button_text,
+                        callback_data=f"product_{product['id']}"
+                    )])
+                    
+                    manufacturer_message += f"**{i}.** {product['name']}\n"
+                    manufacturer_message += f"    Категория: {product.get('category', 'Не указана')}\n"
+                    manufacturer_message += f"    Бренд: {product.get('brand', 'Не указан')}\n\n"
+                
+                keyboard.append([InlineKeyboardButton("🔍 Новый поиск", callback_data="search_new")])
+                keyboard.append([InlineKeyboardButton("🏭 Все производители", callback_data="search_manufacturers")])
+                
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                
+                await query.edit_message_text(manufacturer_message, parse_mode='Markdown', reply_markup=reply_markup)
+                logger.info(f"User {user.id} viewed manufacturer: {manufacturer}")
+                
+            except Exception as e:
+                logger.error(f"Ошибка поиска товаров по производителю для пользователя {user.id}: {e}")
+                await query.edit_message_text("❌ Произошла ошибка при поиске товаров по производителю.")
         
     async def start_polling(self):
         """Запуск бота в режиме polling"""

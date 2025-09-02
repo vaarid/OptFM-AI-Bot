@@ -391,3 +391,10 @@ telegram.error.BadRequest: Query is too old and response timeout expired or quer
 2025-09-01 00:10:40,357 - bot.telegram_bot - INFO - Starting Telegram bot polling...
 2025-09-01 00:10:40,979 - telegram.ext.Application - INFO - Application started
 2025-09-01 00:10:41,157 - __main__ - INFO - Бот успешно запущен и работает
+2025-09-02 11:41:12,684 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-09-02 11:41:13,076 - faq.enhanced_faq_manager - INFO - Загружено 23 FAQ записей из data\faq_enhanced.json
+2025-09-02 11:41:13,076 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-09-02 11:41:13,360 - telegram.ext.Application - INFO - Application started
+2025-09-02 11:41:13,435 - __main__ - INFO - Бот успешно запущен и работает
+2025-09-02 11:41:53,144 - bot.telegram_bot - INFO - User 532044009 (Vaarid) started the bot
+2025-09-02 12:17:45,391 - bot.telegram_bot - INFO - Короткое сообщение от пользователя 532044009: iphone
