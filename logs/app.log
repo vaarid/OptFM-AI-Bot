@@ -397,3 +397,192 @@ telegram.error.BadRequest: Query is too old and response timeout expired or quer
 2025-09-02 15:50:29,084 - telegram.ext.Application - INFO - Application started
 2025-09-02 15:50:29,162 - __main__ - INFO - Бот успешно запущен и работает
 2025-09-02 15:51:20,581 - bot.telegram_bot - INFO - User 532044009 (Vaarid) started the bot
+2025-09-02 17:21:06,797 - bot.telegram_bot - INFO - User 532044009 requested help
+2025-09-02 17:21:08,889 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons (page 1)
+2025-09-02 17:21:10,654 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_6
+2025-09-02 17:21:10,860 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 6
+2025-09-02 17:55:38,289 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_back_to_list
+2025-09-02 17:55:38,381 - bot.telegram_bot - INFO - User 532044009 returned to FAQ list (page 1)
+2025-09-02 17:55:42,753 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_8
+2025-09-02 17:55:42,957 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 8
+2025-09-02 18:10:23,220 - bot.telegram_bot - INFO - Stopping Telegram bot...
+2025-09-02 18:10:23,340 - telegram.ext.Application - WARNING - Fetching updates got a asyncio.CancelledError. Ignoring as this task may onlybe closed via `Application.stop`.
+2025-09-02 18:13:22,958 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-09-02 18:13:23,376 - faq.enhanced_faq_manager - INFO - Загружено 23 FAQ записей из data\faq_enhanced.json
+2025-09-02 18:13:23,391 - db.database - INFO - Database tables created successfully
+2025-09-02 18:13:23,391 - db.database - INFO - Database initialized with URL: sqlite:///./optfm_bot.db
+2025-09-02 18:13:23,391 - notifications.manager_notifier - INFO - Manager notifier initialized with 3 managers
+2025-09-02 18:13:23,391 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-09-02 18:13:23,663 - telegram.ext.Application - INFO - Application started
+2025-09-02 18:13:23,734 - __main__ - INFO - Бот успешно запущен и работает
+2025-09-02 18:14:59,633 - bot.telegram_bot - INFO - User 532044009 (Vaarid) started the bot
+2025-09-02 18:15:02,773 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_application.py", line 1234, in process_update
+    await coroutine
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\YandexDisk\РАБОТА\OptFM\src\bot\telegram_bot.py", line 123, in help_command
+    await update.message.reply_text(help_message, parse_mode='Markdown')
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 2624, in send_message
+    return await super().send_message(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 846, in send_message
+    return await self._send_message(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 703, in _send_message
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 613, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 641, in _do_post
+    return await request.post(
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Can't parse entities: can't find end of the entity starting at byte offset 313
+2025-09-02 18:17:36,064 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_application.py", line 1234, in process_update
+    await coroutine
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\YandexDisk\РАБОТА\OptFM\src\bot\telegram_bot.py", line 123, in help_command
+    await update.message.reply_text(help_message, parse_mode='Markdown')
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 2624, in send_message
+    return await super().send_message(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 846, in send_message
+    return await self._send_message(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 703, in _send_message
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 613, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 641, in _do_post
+    return await request.post(
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Can't parse entities: can't find end of the entity starting at byte offset 313
+2025-09-02 18:17:42,024 - bot.telegram_bot - INFO - Stopping Telegram bot...
+2025-09-02 18:17:42,093 - telegram.ext.Application - WARNING - Fetching updates got a asyncio.CancelledError. Ignoring as this task may onlybe closed via `Application.stop`.
+2025-09-02 18:17:49,334 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task cancelling name='Application:8331497512:update_fetcher' coro=<Application._update_fetcher() running at D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_application.py:1149> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at C:\Users\vaari\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764]>
+2025-09-02 18:17:56,860 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-09-02 18:17:57,326 - faq.enhanced_faq_manager - INFO - Загружено 23 FAQ записей из data\faq_enhanced.json
+2025-09-02 18:17:57,338 - db.database - INFO - Database tables created successfully
+2025-09-02 18:17:57,338 - db.database - INFO - Database initialized with URL: sqlite:///./optfm_bot.db
+2025-09-02 18:17:57,338 - notifications.manager_notifier - INFO - Manager notifier initialized with 3 managers
+2025-09-02 18:17:57,340 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-09-02 18:17:57,538 - telegram.ext.Application - INFO - Application started
+2025-09-02 18:17:57,599 - __main__ - INFO - Бот успешно запущен и работает
+2025-09-02 18:18:10,171 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task cancelling name='Application:8331497512:update_fetcher' coro=<Application._update_fetcher() running at D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_application.py:1149> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at C:\Users\vaari\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764]>
+2025-09-02 18:18:21,545 - bot.telegram_bot - INFO - User 532044009 (Vaarid) started the bot
+2025-09-02 18:18:23,498 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_application.py", line 1234, in process_update
+    await coroutine
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_basehandler.py", line 157, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\YandexDisk\РАБОТА\OptFM\src\bot\telegram_bot.py", line 123, in help_command
+    await update.message.reply_text(help_message, parse_mode='Markdown')
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_message.py", line 1094, in reply_text
+    return await self.get_bot().send_message(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 2624, in send_message
+    return await super().send_message(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 525, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 846, in send_message
+    return await self._send_message(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 522, in _send_message
+    result = await super()._send_message(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 703, in _send_message
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 613, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_extbot.py", line 340, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\_bot.py", line 641, in _do_post
+    return await request.post(
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 200, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\request\_baserequest.py", line 379, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Can't parse entities: can't find end of the entity starting at byte offset 309
+2025-09-02 18:19:23,034 - bot.telegram_bot - INFO - Stopping Telegram bot...
+2025-09-02 18:19:23,108 - telegram.ext.Application - WARNING - Fetching updates got a asyncio.CancelledError. Ignoring as this task may onlybe closed via `Application.stop`.
+2025-09-02 18:19:45,249 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task cancelling name='Application:8331497512:update_fetcher' coro=<Application._update_fetcher() running at D:\YandexDisk\РАБОТА\OptFM\.venv\Lib\site-packages\telegram\ext\_application.py:1149> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at C:\Users\vaari\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764]>
+2025-09-02 18:19:49,901 - __main__ - INFO - Запуск OptFM AI Bot...
+2025-09-02 18:19:50,303 - faq.enhanced_faq_manager - INFO - Загружено 23 FAQ записей из data\faq_enhanced.json
+2025-09-02 18:19:50,314 - db.database - INFO - Database tables created successfully
+2025-09-02 18:19:50,314 - db.database - INFO - Database initialized with URL: sqlite:///./optfm_bot.db
+2025-09-02 18:19:50,314 - notifications.manager_notifier - INFO - Manager notifier initialized with 3 managers
+2025-09-02 18:19:50,314 - bot.telegram_bot - INFO - Starting Telegram bot polling...
+2025-09-02 18:19:50,537 - telegram.ext.Application - INFO - Application started
+2025-09-02 18:19:50,606 - __main__ - INFO - Бот успешно запущен и работает
+2025-09-02 18:19:57,269 - bot.telegram_bot - INFO - User 532044009 (Vaarid) started the bot
+2025-09-02 18:19:59,324 - bot.telegram_bot - INFO - User 532044009 requested help
+2025-09-02 18:20:02,985 - bot.telegram_bot - INFO - User 532044009 started request form
+2025-09-02 18:20:16,619 - bot.telegram_bot - INFO - Сообщение от пользователя 532044009: Зайцев Евгений Вадимович
+2025-09-02 18:20:22,237 - bot.telegram_bot - INFO - Сообщение от пользователя 532044009: 79158300626
+2025-09-02 18:20:33,109 - bot.telegram_bot - INFO - Сообщение от пользователя 532044009: пропус
+2025-09-02 18:20:37,750 - bot.telegram_bot - INFO - Сообщение от пользователя 532044009: пропустить
+2025-09-02 18:20:45,059 - bot.telegram_bot - INFO - Сообщение от пользователя 532044009: Хочу харчо
+2025-09-02 18:20:45,404 - db.repository - INFO - Created new user: 2 (telegram_id: 532044009)
+2025-09-02 18:20:45,412 - db.repository - INFO - Updated user contacts: 2
+2025-09-02 18:20:45,420 - db.repository - INFO - Created new request: 3 for user: 2
+2025-09-02 18:20:45,420 - notifications.manager_notifier - INFO - Notification sent successfully for request 3
+2025-09-02 18:20:45,421 - bot.telegram_bot - INFO - Request saved successfully: 3 for user 532044009
+2025-09-02 18:21:56,844 - bot.telegram_bot - INFO - User 532044009 requested FAQ list with buttons (page 1)
+2025-09-02 18:22:00,060 - bot.telegram_bot - INFO - Callback от пользователя 532044009: faq_4
+2025-09-02 18:22:00,213 - bot.telegram_bot - INFO - User 532044009 viewed FAQ 4
+2025-09-02 18:22:06,690 - bot.telegram_bot - INFO - User 532044009 viewed their requests (1 requests)

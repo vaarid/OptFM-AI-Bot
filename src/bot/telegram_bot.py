@@ -9,22 +9,38 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from faq.enhanced_faq_manager import EnhancedFAQManager
+from forms.request_form import RequestFormManager
+from db.database import init_database, get_db
+from db.repository import UserRepository, RequestRepository, DialogRepository
+from notifications.manager_notifier import ManagerNotifier, NotificationConfig
 
 logger = logging.getLogger(__name__)
 
 class OptFMBot:
     """Основной класс Telegram бота для OptFM"""
     
-    def __init__(self, token: str):
+    def __init__(self, token: str, database_url: str = None):
         """
         Инициализация бота
         
         Args:
             token: Telegram Bot Token
+            database_url: URL базы данных
         """
         self.token = token
         self.application = Application.builder().token(token).build()
         self.faq_manager = EnhancedFAQManager()
+        
+        # Инициализация базы данных
+        self.db_manager = init_database(database_url)
+        
+        # Инициализация форм заявок
+        self.form_manager = RequestFormManager()
+        
+        # Инициализация уведомлений
+        notification_config = NotificationConfig.get_default_config()
+        self.notifier = ManagerNotifier(notification_config)
+        
         self._setup_handlers()
         
     def _setup_handlers(self):
@@ -38,7 +54,14 @@ class OptFMBot:
         # Обработчик команды /faq
         self.application.add_handler(CommandHandler("faq", self.faq_command))
         
-
+        # Обработчик команды /request - создание заявки
+        self.application.add_handler(CommandHandler("request", self.request_command))
+        
+        # Обработчик команды /cancel - отмена заявки
+        self.application.add_handler(CommandHandler("cancel", self.cancel_command))
+        
+        # Обработчик команды /my_requests - просмотр своих заявок
+        self.application.add_handler(CommandHandler("my_requests", self.my_requests_command))
         
         # Обработчик callback-запросов (для интерактивных кнопок)
         self.application.add_handler(CallbackQueryHandler(self.button_callback))
@@ -74,25 +97,30 @@ class OptFMBot:
             context: Контекст бота
         """
         help_message = (
-            "🤖 **OptFM AI Bot - Справка**\n\n"
-            "**Доступные команды:**\n"
+            "🤖 OptFM AI Bot - Справка\n\n"
+            "Доступные команды:\n"
             "/start - Начать работу с ботом\n"
             "/help - Показать эту справку\n"
-            "/faq - Показать FAQ с интерактивными кнопками\n\n"
-            "**Как использовать:**\n"
+            "/faq - Показать FAQ с интерактивными кнопками\n"
+            "/request - Создать заявку менеджеру\n"
+            "/my_requests - Просмотр ваших заявок\n"
+            "/cancel - Отменить заполнение заявки\n\n"
+            "Как использовать:\n"
             "• Напишите вопрос о продуктах OptFM\n"
             "• Используйте /faq для просмотра всех вопросов с кнопками\n"
-            "• Нажмите на интересующий вопрос для получения ответа\n\n"
-            "**Примеры вопросов:**\n"
+            "• Если ответ не найден, используйте /request для создания заявки\n\n"
+            "Примеры вопросов:\n"
             "• Какие у вас есть продукты?\n"
             "• Расскажите о ценах\n"
             "• Как с вами связаться?\n\n"
-
-            "**Интерактивные FAQ:**\n"
+            "Создание заявки:\n"
+            "Используйте /request для создания заявки менеджеру. "
+            "Бот проведет вас через простую форму сбора контактных данных.\n\n"
+            "Интерактивные FAQ:\n"
             "Команда /faq покажет все вопросы в виде кнопок. Просто нажмите на интересующий вопрос!"
         )
         
-        await update.message.reply_text(help_message, parse_mode='Markdown')
+        await update.message.reply_text(help_message)
         logger.info(f"User {update.effective_user.id} requested help")
         
     async def faq_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -155,47 +183,49 @@ class OptFMBot:
         
     async def echo_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
-        Обработчик текстовых сообщений с поиском в FAQ
+        Обработчик всех текстовых сообщений (поиск в FAQ и формы заявок)
         
         Args:
             update: Объект обновления от Telegram
             context: Контекст бота
         """
-        user_message = update.message.text
         user = update.effective_user
+        user_message = update.message.text.strip()
+        
+        logger.info(f"Сообщение от пользователя {user.id}: {user_message}")
+        
+        # Проверяем, заполняет ли пользователь форму заявки
+        if self.form_manager.is_user_filling_form(user.id):
+            await self._handle_form_input(update, context)
+            return
         
         # Проверяем, является ли сообщение приветствием
-        greeting_keywords = ['привет', 'здравствуй', 'добрый день', 'добрый вечер', 'доброе утро', 'hi', 'hello']
-        is_greeting = any(greeting in user_message.lower() for greeting in greeting_keywords)
+        greetings = ["привет", "здравствуйте", "добрый день", "добрый вечер", "доброе утро", "hi", "hello"]
+        is_greeting = any(greeting in user_message.lower() for greeting in greetings)
         
         # Проверяем, является ли сообщение прощанием
-        farewell_keywords = ['пока', 'до свидания', 'до встречи', 'спасибо', 'благодарю', 'bye', 'goodbye', 'thanks']
-        is_farewell = any(farewell in user_message.lower() for farewell in farewell_keywords)
+        farewells = ["пока", "до свидания", "до встречи", "спасибо", "благодарю", "bye", "goodbye"]
+        is_farewell = any(farewell in user_message.lower() for farewell in farewells)
         
-        # Проверяем, является ли сообщение вопросом (содержит вопросительные слова)
-        question_keywords = ['что', 'как', 'где', 'когда', 'почему', 'зачем', 'какие', 'какой', 'сколько', 'есть ли', 'можно ли']
-        is_question = any(question in user_message.lower() for question in question_keywords) or user_message.strip().endswith('?')
+        # Проверяем, является ли сообщение вопросом
+        question_words = ["что", "как", "где", "когда", "почему", "зачем", "какой", "какая", "какие", "сколько", "?"]
+        is_question = any(word in user_message.lower() for word in question_words) or user_message.endswith("?")
         
         if is_greeting:
-            # Приветствие - даем дружелюбный ответ
             response = (
-                f"👋 Привет, {user.first_name}!\n\n"
-                "Я бот компании OptFM. Могу помочь с информацией о наших продуктах и услугах.\n\n"
-                "Задайте мне любой вопрос, например:\n"
-                "• Какие товары вы продаете?\n"
-                "• Как с вами связаться?\n"
-                "• Какие условия доставки?\n"
-                "• Есть ли у вас гарантия?\n\n"
-                "Или используйте /help для получения справки."
+                f"👋 Привет, {user.first_name}! Рад вас видеть!\n\n"
+                "Я бот компании OptFM и готов помочь вам с любыми вопросами о наших продуктах и услугах.\n\n"
+                "Вы можете:\n"
+                "• Задать мне любой вопрос\n"
+                "• Использовать /faq для просмотра частых вопросов\n"
+                "• Использовать /help для получения справки\n"
+                "• Использовать /request для создания заявки менеджеру"
             )
             logger.info(f"Приветствие от пользователя {user.id}: {user_message}")
         elif is_farewell:
-            # Прощание - даем вежливый ответ
             response = (
-                f"👋 До свидания, {user.first_name}!\n\n"
-                "Спасибо за обращение к OptFM. Если у вас появятся вопросы, "
-                "я всегда готов помочь!\n\n"
-                "Удачного дня! 😊"
+                f"👋 До свидания, {user.first_name}! Было приятно пообщаться!\n\n"
+                "Если у вас появятся вопросы, обращайтесь в любое время. Удачи!"
             )
             logger.info(f"Прощание от пользователя {user.id}: {user_message}")
         elif not is_question and len(user_message.split()) < 3:
@@ -224,12 +254,12 @@ class OptFMBot:
                     f"📝 Спасибо за ваш вопрос: \"{user_message}\"\n\n"
                     "К сожалению, я не нашел точного ответа в базе знаний. "
                     "Для получения подробной информации оставьте заявку, и наш менеджер свяжется с вами.\n\n"
-                    "Или попробуйте переформулировать вопрос. Например:\n"
-                    "• Какие у вас есть продукты?\n"
-                    "• Как с вами связаться?\n"
-                    "• Какие цены?"
+                    "Используйте команду /request для создания заявки или попробуйте переформулировать вопрос."
                 )
                 logger.info(f"FAQ ответ не найден для пользователя {user.id}: {user_message[:50]}...")
+        
+        # Сохраняем диалог в базу данных
+        await self._save_dialog(user.id, user_message, response, is_question)
         
         await update.message.reply_text(response)
     
@@ -564,3 +594,211 @@ class OptFMBot:
         await self.application.updater.stop()
         await self.application.stop()
         await self.application.shutdown()
+    
+    # === Методы для работы с заявками ===
+    
+    async def request_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Обработчик команды /request - создание заявки
+        
+        Args:
+            update: Объект обновления от Telegram
+            context: Контекст бота
+        """
+        user = update.effective_user
+        
+        # Проверяем, не заполняет ли пользователь уже форму
+        if self.form_manager.is_user_filling_form(user.id):
+            await update.message.reply_text(
+                "📝 Вы уже заполняете заявку. Продолжайте или используйте /cancel для отмены."
+            )
+            return
+        
+        # Начинаем заполнение формы
+        message = self.form_manager.start_form(user.id)
+        await update.message.reply_text(message)
+        
+        logger.info(f"User {user.id} started request form")
+    
+    async def cancel_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Обработчик команды /cancel - отмена заявки
+        
+        Args:
+            update: Объект обновления от Telegram
+            context: Контекст бота
+        """
+        user = update.effective_user
+        
+        if self.form_manager.is_user_filling_form(user.id):
+            message = self.form_manager.cancel_form(user.id)
+            await update.message.reply_text(message)
+            logger.info(f"User {user.id} cancelled request form")
+        else:
+            await update.message.reply_text("❌ Вы не заполняете заявку в данный момент.")
+    
+    async def my_requests_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Обработчик команды /my_requests - просмотр своих заявок
+        
+        Args:
+            update: Объект обновления от Telegram
+            context: Контекст бота
+        """
+        user = update.effective_user
+        
+        try:
+            # Получаем пользователя из базы данных
+            session = self.db_manager.get_session_sync()
+            user_repo = UserRepository(session)
+            request_repo = RequestRepository(session)
+            
+            db_user = user_repo.get_by_telegram_id(user.id)
+            
+            if not db_user:
+                await update.message.reply_text(
+                    "❌ У вас пока нет заявок. Используйте /request для создания первой заявки!"
+                )
+                return
+            
+            # Получаем заявки пользователя
+            requests = request_repo.get_user_requests(db_user.id)
+            
+            if not requests:
+                await update.message.reply_text(
+                    "📝 У вас пока нет заявок. Используйте /request для создания первой заявки!"
+                )
+                return
+            
+            # Формируем сообщение со списком заявок
+            message = f"📋 **Ваши заявки ({len(requests)}):**\n\n"
+            
+            for i, request in enumerate(requests, 1):
+                status_emoji = {
+                    "new": "🆕",
+                    "in_progress": "⏳", 
+                    "completed": "✅",
+                    "cancelled": "❌"
+                }.get(request.status.value, "❓")
+                
+                message += (
+                    f"{i}. {status_emoji} **{request.title}**\n"
+                    f"   📅 {request.created_at.strftime('%d.%m.%Y %H:%M')}\n"
+                    f"   📝 {request.description[:100]}{'...' if len(request.description) > 100 else ''}\n\n"
+                )
+            
+            message += "Для создания новой заявки используйте /request"
+            
+            await update.message.reply_text(message, parse_mode='Markdown')
+            logger.info(f"User {user.id} viewed their requests ({len(requests)} requests)")
+            
+        except Exception as e:
+            logger.error(f"Error getting user requests: {e}")
+            await update.message.reply_text("❌ Произошла ошибка при получении заявок. Попробуйте позже.")
+    
+    async def _handle_form_input(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """
+        Обработка ввода в форме заявки
+        
+        Args:
+            update: Объект обновления от Telegram
+            context: Контекст бота
+        """
+        user = update.effective_user
+        user_input = update.message.text.strip()
+        
+        # Обрабатываем ввод формы
+        result = self.form_manager.process_input(user.id, user_input)
+        
+        await update.message.reply_text(result["message"])
+        
+        # Если форма завершена, сохраняем заявку
+        if result.get("completed", False):
+            await self._save_request(user, result["data"])
+            # Очищаем форму
+            self.form_manager.clear_form(user.id)
+    
+    async def _save_request(self, user, form_data: Dict[str, Any]):
+        """
+        Сохранение заявки в базу данных
+        
+        Args:
+            user: Пользователь Telegram
+            form_data: Данные формы
+        """
+        try:
+            session = self.db_manager.get_session_sync()
+            user_repo = UserRepository(session)
+            request_repo = RequestRepository(session)
+            
+            # Получаем или создаем пользователя
+            db_user = user_repo.get_by_telegram_id(user.id)
+            if not db_user:
+                db_user = user_repo.create_user(
+                    telegram_id=user.id,
+                    username=user.username,
+                    first_name=user.first_name,
+                    last_name=user.last_name
+                )
+            
+            # Обновляем контактные данные пользователя
+            user_repo.update_user_contacts(
+                db_user.id,
+                phone=form_data.get("phone"),
+                email=form_data.get("email")
+            )
+            
+            # Создаем заявку
+            title = form_data.get("description", "Новая заявка")[:200]
+            description = form_data.get("description", "")
+            
+            request = request_repo.create_request(
+                user_id=db_user.id,
+                title=title,
+                description=description
+            )
+            
+            # Уведомляем менеджеров
+            request_data = {
+                "id": request.id,
+                "title": request.title,
+                "description": request.description,
+                "created_at": request.created_at
+            }
+            
+            user_data = {
+                "name": form_data.get("name"),
+                "phone": form_data.get("phone"),
+                "email": form_data.get("email"),
+                "telegram_id": user.id
+            }
+            
+            self.notifier.notify_new_request(request_data, user_data)
+            
+            logger.info(f"Request saved successfully: {request.id} for user {user.id}")
+            
+        except Exception as e:
+            logger.error(f"Error saving request: {e}")
+    
+    async def _save_dialog(self, user_id: int, message: str, response: str, is_question: bool = True):
+        """
+        Сохранение диалога в базу данных
+        
+        Args:
+            user_id: ID пользователя
+            message: Сообщение пользователя
+            response: Ответ бота
+            is_question: Является ли сообщение вопросом
+        """
+        try:
+            session = self.db_manager.get_session_sync()
+            user_repo = UserRepository(session)
+            dialog_repo = DialogRepository(session)
+            
+            # Получаем пользователя
+            db_user = user_repo.get_by_telegram_id(user_id)
+            if db_user:
+                dialog_repo.add_dialog(db_user.id, message, response, is_question)
+                
+        except Exception as e:
+            logger.error(f"Error saving dialog: {e}")

@@ -46,7 +46,7 @@ async def main():
         
         # Создаем и запускаем бота
         logger.info("Запуск OptFM AI Bot...")
-        bot = OptFMBot(Config.TELEGRAM_BOT_TOKEN)
+        bot = OptFMBot(Config.TELEGRAM_BOT_TOKEN, Config.DATABASE_URL)
         
         # Запускаем бота
         await bot.start_polling()

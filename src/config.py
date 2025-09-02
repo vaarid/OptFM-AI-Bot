@@ -23,8 +23,17 @@ class Config:
     LOG_FILE: str = os.getenv("LOG_FILE", "logs/app.log")
     API_LOG_FILE: str = os.getenv("API_LOG_FILE", "logs/api.log")
     
-    # База данных (для будущих итераций)
+    # База данных
     DATABASE_URL: Optional[str] = os.getenv("DATABASE_URL")
+    
+    # Уведомления менеджеров
+    NOTIFICATIONS_ENABLED: bool = os.getenv("NOTIFICATIONS_ENABLED", "false").lower() == "true"
+    EMAIL_ENABLED: bool = os.getenv("EMAIL_ENABLED", "false").lower() == "true"
+    SMTP_SERVER: str = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USERNAME: str = os.getenv("SMTP_USERNAME", "")
+    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
+    FROM_EMAIL: str = os.getenv("FROM_EMAIL", "bot@optfm.ru")
     
     @classmethod
     def validate(cls) -> bool:
