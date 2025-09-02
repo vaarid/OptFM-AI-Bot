@@ -67,8 +67,7 @@ archives/
 *.pdf
 *.doc
 *.docx
+*.ppt
+*.pptx
 *.txt
 *.rtf
-*.odt
-*.ods
-*.odp
