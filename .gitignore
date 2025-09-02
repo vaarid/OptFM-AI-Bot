@@ -59,3 +59,16 @@ Thumbs.db
 
 # Archives
 archives/
+
+# Document formats
+*.xlsx
+*.xls
+*.csv
+*.pdf
+*.doc
+*.docx
+*.txt
+*.rtf
+*.odt
+*.ods
+*.odp
